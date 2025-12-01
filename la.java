@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class LexicalAnalyzer{
+public class la{
     
     static final Set<String> keywords= new HashSet<>(Arrays.asList(
         "int", "float", "if", "else", "else if", "return", "while", "for", "do"
