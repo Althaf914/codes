@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Dijkstra {
+public class dij {
 
     static class Edge{
         int v;

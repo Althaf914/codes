@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class FirstFollow {
+public class FF {
 
     static String[] production = new String[20];
     static String[] firstSet = new String[20];

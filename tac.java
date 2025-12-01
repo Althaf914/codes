@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class TAC_Simple {
+public class tac {
     
     static int t= 1;
 

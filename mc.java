@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class MachineCode {
+public class mc {
 
     static int temp = 1;
 
