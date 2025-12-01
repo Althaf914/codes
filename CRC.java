@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class CRC {
+public class crc {
 
     // XOR operation for CRC division
     static String xorBits(String divisorPart, String currentBits) {
