@@ -15,7 +15,7 @@ public class FirstFollow {
 
         System.out.println("Enter productions (like E=TX or X=+TX or X=#):");
         for (int i = 0; i < n; i++) {
-            production[i] = sc.nextLine().trim().replaceAll("\\s+","");
+            production[i] = sc.nextLine().trim().replaceAll("\\s+", "");
         }
         sc.close();
 
@@ -41,6 +41,7 @@ public class FirstFollow {
     // ---------- FIRST FUNCTION ----------
     static void findFirst(StringBuilder result, char c) {
 
+        // Terminal → FIRST is the terminal itself
         if (!Character.isUpperCase(c)) {
             addToResult(result, c);
             return;
@@ -49,25 +50,30 @@ public class FirstFollow {
         for (int i = 0; i < n; i++) {
             if (production[i].charAt(0) == c) {
 
-                int j = 2;
+                // Loop through RHS: for consistency with FOLLOW
+                for (int j = 2; j < production[i].length(); j++) {
 
-                if (production[i].charAt(j) == '#') {
-                    addToResult(result, '#');
-                } else {
-                    while (j < production[i].length()) {
-                        char next = production[i].charAt(j);
-                        StringBuilder sub = new StringBuilder();
+                    char next = production[i].charAt(j);
 
-                        findFirst(sub, next);
-
-                        for (int k = 0; k < sub.length(); k++)
-                            addToResult(result, sub.charAt(k));
-
-                        if (sub.indexOf("#") == -1)
-                            break;
-
-                        j++;
+                    // If epsilon
+                    if (next == '#') {
+                        addToResult(result, '#');
+                        break;
                     }
+
+                    // FIRST(next)
+                    StringBuilder sub = new StringBuilder();
+                    findFirst(sub, next);
+
+                    // Add FIRST(next) except duplicates
+                    for (int k = 0; k < sub.length(); k++)
+                        addToResult(result, sub.charAt(k));
+
+                    // If no epsilon → stop
+                    if (sub.indexOf("#") == -1)
+                        break;
+
+                    // Otherwise continue to next symbol
                 }
             }
         }
@@ -76,30 +82,36 @@ public class FirstFollow {
     // ---------- FOLLOW FUNCTION ----------
     static void findFollow(StringBuilder result, char c) {
 
+        // Add $ for start symbol
         if (production[0].charAt(0) == c)
-            addToResult(result, '$');   // Start symbol
+            addToResult(result, '$');
 
         for (int i = 0; i < n; i++) {
             String prod = production[i];
 
             for (int j = 2; j < prod.length(); j++) {
+
                 if (prod.charAt(j) == c) {
 
+                    // If there is a symbol after c
                     if (j + 1 < prod.length()) {
 
-                        StringBuilder sub = new StringBuilder();
                         char next = prod.charAt(j + 1);
+                        StringBuilder sub = new StringBuilder();
 
                         findFirst(sub, next);
 
+                        // Add FIRST(next) except epsilon
                         for (int k = 0; k < sub.length(); k++)
                             if (sub.charAt(k) != '#')
                                 addToResult(result, sub.charAt(k));
 
+                        // If epsilon → FOLLOW(LHS)
                         if (sub.indexOf("#") != -1)
                             findFollow(result, prod.charAt(0));
 
                     } else if (prod.charAt(0) != c) {
+                        // If at end → FOLLOW(LHS)
                         findFollow(result, prod.charAt(0));
                     }
                 }
