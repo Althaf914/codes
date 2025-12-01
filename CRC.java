@@ -21,7 +21,7 @@ public class crc {
             if (temp.charAt(0) == '1') {
                 temp = xor(divisor, temp) + dividend.charAt(pick);
             } else {
-                temp = xor("0".repeat(pick), temp) + dividend.charAt(pick);
+                temp = xor("0".repeat(divisor.length()), temp) + dividend.charAt(pick);
             }
             pick++;
         }
@@ -30,7 +30,7 @@ public class crc {
         if (temp.charAt(0) == '1')
             temp = xor(divisor, temp);
         else
-            temp = xor("0".repeat(pick), temp);
+            temp = xor("0".repeat(divisor.length()), temp);
 
         return temp;
     }
