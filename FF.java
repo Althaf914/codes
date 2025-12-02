@@ -6,7 +6,6 @@ public class ff{
     static Map<Character, Set<String>> FIRST = new HashMap<>();
     static Map<Character, Set<String>> FOLLOW = new HashMap<>();
     static int n;
-
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
@@ -23,40 +22,34 @@ public class ff{
         }
         sc.close();
 
-        // Detect all non-terminals
         for (String prod : productions) {
             char nt = prod.charAt(0);
             FIRST.put(nt, new HashSet<>());
             FOLLOW.put(nt, new HashSet<>());
         }
 
-        // FIRST computation
         for (char nt : FIRST.keySet()) {
             computeFirst(nt);
         }
 
-        // FOLLOW computation
         char start = productions.get(0).charAt(0);
-        FOLLOW.get(start).add("$"); // add $ for start symbol
+        FOLLOW.get(start).add("$");
 
         for (char nt : FOLLOW.keySet()) {
             computeFollow(nt);
         }
 
-        // PRINT FIRST SETS
         System.out.println("\n--- FIRST sets ---");
         for (char nt : FIRST.keySet()) {
             System.out.println("FIRST(" + nt + ") = " + FIRST.get(nt));
         }
 
-        // PRINT FOLLOW SETS
         System.out.println("\n--- FOLLOW sets ---");
         for (char nt : FOLLOW.keySet()) {
             System.out.println("FOLLOW(" + nt + ") = " + FOLLOW.get(nt));
         }
     }
 
-    // ---------- FIRST FUNCTION ----------
     static void computeFirst(char c) {
 
         for (String prod : productions) {
@@ -70,19 +63,16 @@ public class ff{
 
                     String sym = symbols[j];
 
-                    // Terminal
                     if (!isNonTerminal(sym)) {
                         FIRST.get(c).add(sym);
                         break;
                     }
 
-                    // Non-terminal
                     computeFirst(sym.charAt(0));
 
                     for (String x : FIRST.get(sym.charAt(0)))
                         FIRST.get(c).add(x);
 
-                    // If no epsilon stop
                     if (!FIRST.get(sym.charAt(0)).contains("#"))
                         break;
                 }
@@ -90,7 +80,6 @@ public class ff{
         }
     }
 
-    // ---------- FOLLOW FUNCTION ----------
     static void computeFollow(char c) {
 
         for (String prod : productions) {
@@ -103,25 +92,22 @@ public class ff{
 
                 if (symbols[j].equals(String.valueOf(c))) {
 
-                    // If something exists after c
                     if (j + 1 < symbols.length) {
 
                         String next = symbols[j + 1];
 
                         if (!isNonTerminal(next)) {
-                            FOLLOW.get(c).add(next); // terminal
+                            FOLLOW.get(c).add(next);
                         } else {
                             for (String x : FIRST.get(next.charAt(0)))
                                 if (!x.equals("#"))
                                     FOLLOW.get(c).add(x);
 
-                            // epsilon case
                             if (FIRST.get(next.charAt(0)).contains("#"))
                                 FOLLOW.get(c).addAll(FOLLOW.get(lhs));
                         }
 
                     } else if (lhs != c) {
-                        // End of RHS → FOLLOW(lhs)
                         FOLLOW.get(c).addAll(FOLLOW.get(lhs));
                     }
                 }
@@ -129,7 +115,6 @@ public class ff{
         }
     }
 
-    // ---------- helper ----------
     static boolean isNonTerminal(String s) {
         return s.length() == 1 && Character.isUpperCase(s.charAt(0));
     }

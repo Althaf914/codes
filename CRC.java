@@ -2,7 +2,6 @@ import java.util.*;
 
 public class crc {
 
-    // XOR of two binary strings
     static String xor(String a, String b) {
         StringBuilder result = new StringBuilder();
         for (int i = 1; i < a.length(); i++) {
@@ -11,7 +10,6 @@ public class crc {
         return result.toString();
     }
 
-    // Mod-2 division
     static String divide(String dividend, String divisor) {
 
         int pick = divisor.length();
@@ -26,7 +24,6 @@ public class crc {
             pick++;
         }
 
-        // last step
         if (temp.charAt(0) == '1')
             temp = xor(divisor, temp);
         else
@@ -45,7 +42,6 @@ public class crc {
         System.out.print("Enter Key: ");
         String key = sc.next();
 
-        // Sender side -------------------------
         String appended = data + "0".repeat(key.length() - 1);
         String remainder = divide(appended, key);
 
@@ -55,7 +51,6 @@ public class crc {
         System.out.println("Remainder: " + remainder);
         System.out.println("Encoded Data: " + codeword);
 
-        // Receiver side ------------------------
         System.out.print("\nEnter Received Bits: ");
         String recv = sc.next();
 

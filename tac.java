@@ -67,5 +67,6 @@ public class tac {
         System.out.println("\nThree Address Code:");
         for (String s : tac)
             System.out.println(s);
+        sc.close();
     }
 }

@@ -20,7 +20,6 @@ public class pp {
         for (int i = 0; i < n; i++)
             productions.add(sc.nextLine().trim());
 
-        // Detect non-terminals
         for (String prod : productions) {
             char nt = prod.charAt(0);
             FIRST.put(nt, new HashSet<>());
@@ -28,31 +27,25 @@ public class pp {
             TABLE.put(nt, new HashMap<>());
         }
 
-        // FIRST
         for (char nt : FIRST.keySet())
             computeFirst(nt);
 
-        // FOLLOW
         char start = productions.get(0).charAt(0);
         FOLLOW.get(start).add("$");
 
         for (char nt : FOLLOW.keySet())
             computeFollow(nt);
 
-        // PRINT FIRST
         System.out.println("\n--- FIRST sets ---");
         for (char nt : FIRST.keySet())
             System.out.println("FIRST(" + nt + ") = " + FIRST.get(nt));
 
-        // PRINT FOLLOW
         System.out.println("\n--- FOLLOW sets ---");
         for (char nt : FOLLOW.keySet())
             System.out.println("FOLLOW(" + nt + ") = " + FOLLOW.get(nt));
 
-        // Build LL(1)
         buildLL1Table();
 
-        // Input parsing
         System.out.print("\nEnter input string (tokens separated by spaces): ");
         String input = sc.nextLine().trim() + " $";
 
@@ -66,7 +59,6 @@ public class pp {
             System.out.println("\n❌ INPUT REJECTED!");
     }
 
-    // ---------------------------------------------------
     static void computeFirst(char c) {
 
         for (String prod : productions) {
@@ -78,12 +70,12 @@ public class pp {
 
                 for (String sym : symbols) {
 
-                    if (!isNonTerminal(sym)) { // terminal
+                    if (!isNonTerminal(sym)) {
                         FIRST.get(c).add(sym);
                         break;
                     }
 
-                    computeFirst(sym.charAt(0)); // recursion
+                    computeFirst(sym.charAt(0));
 
                     FIRST.get(c).addAll(FIRST.get(sym.charAt(0)));
 
@@ -94,7 +86,6 @@ public class pp {
         }
     }
 
-    // ---------------------------------------------------
     static void computeFollow(char c) {
 
         for (String prod : productions) {
@@ -130,9 +121,6 @@ public class pp {
         }
     }
 
-    // ---------------------------------------------------
-    // LL(1) TABLE
-    // ---------------------------------------------------
     static void buildLL1Table() {
 
         for (String prod : productions) {
@@ -174,9 +162,6 @@ public class pp {
         return result;
     }
 
-    // ---------------------------------------------------
-    // INPUT PARSER (NO STEPS PRINTED)
-    // ---------------------------------------------------
     static boolean parseInput(String input) {
 
         Stack<String> stack = new Stack<>();
@@ -191,7 +176,6 @@ public class pp {
             String top = stack.peek();
             String cur = tokens[idx];
 
-            // terminal match
             if (!isNonTerminal(top)) {
 
                 if (top.equals(cur)) {
@@ -201,7 +185,7 @@ public class pp {
                     return false;
                 }
 
-            } else { // NT case
+            } else {
 
                 char A = top.charAt(0);
 
@@ -223,7 +207,6 @@ public class pp {
         return true;
     }
 
-    // ---------------------------------------------------
     static boolean isNonTerminal(String s) {
         return s.length() == 1 && Character.isUpperCase(s.charAt(0));
     }

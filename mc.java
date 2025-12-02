@@ -6,21 +6,20 @@ public class mc {
 
     static void genArithmetic(String expr) {
         Stack<Character> opStack = new Stack<>();
-        Stack<String> valStack = new Stack<>();   // holds operands (a, b, t1, t2)
+        Stack<String> valStack = new Stack<>();
 
         for (int i = 0; i < expr.length(); i++) {
             char c = expr.charAt(i);
 
-            // If operand
             if (Character.isLetterOrDigit(c)) {
                 System.out.println("LOAD " + c);
                 valStack.push(String.valueOf(c));
             }
-            // If operator
+
             else if (c == '+' || c == '-' || c == '*' || c == '/') {
                 opStack.push(c);
             }
-            // When encountering ')', perform operation
+
             else if (c == ')') {
                 char op = opStack.pop();
 
@@ -35,11 +34,10 @@ public class mc {
                 String t = "t" + temp++;
                 System.out.println("STORE " + t);
 
-                valStack.push(t);     // result becomes new operand
+                valStack.push(t);
             }
         }
 
-        // Extra operators (rare in fully parenthesized expressions)
         while (!opStack.isEmpty()) {
             char op = opStack.pop();
             String right = valStack.pop();

@@ -2,8 +2,6 @@ import java.util.*;
 
 public class lalr {
 
-    // ACTION table (state x terminal)
-    // terminals:   i   +   *   (   )   $
     static int[][] ACTION = {
         {5, 0, 0, 4, 0, 0},
         {0, 6, 0, 0, 0, 999},
@@ -19,8 +17,6 @@ public class lalr {
         {0, -5, -5, 0, -5, -5}
     };
 
-    // GOTO table (state x non-terminal)
-    // non-terminals: E, T, F
     static int[][] GOTO = {
         {1, 2, 3},
         {0, 0, 0},
@@ -36,13 +32,10 @@ public class lalr {
         {0, 0, 0}
     };
 
-    // Production lengths
     static int[] prodLen = {0, 3, 1, 3, 1, 3, 1};
 
-    // Production LHS
     static char[] prodLHS = {' ', 'E', 'E', 'T', 'T', 'F', 'F'};
 
-    // Terminal indexing
     static int termIndex(char c) {
         return switch(c) {
             case 'i' -> 0;
@@ -55,7 +48,6 @@ public class lalr {
         };
     }
 
-    // Non-terminal indexing
     static int nonTermIndex(char c) {
         return switch(c) {
             case 'E' -> 0;
@@ -91,7 +83,6 @@ public class lalr {
 
         while (true) {
 
-            // SKIP SPACES
             while (ip < input.length() && input.charAt(ip) == ' ')
                 ip++;
 
@@ -106,12 +97,12 @@ public class lalr {
             int state = stack[top];
             int action = ACTION[state][t];
 
-            if (action > 0 && action != 999) {   // SHIFT
+            if (action > 0 && action != 999) {
                 top++;
                 stack[top] = action;
                 ip++;
             }
-            else if (action < 0) {              // REDUCE
+            else if (action < 0) {        
                 int prod = -action;
                 int len = prodLen[prod];
                 char A = prodLHS[prod];
@@ -123,11 +114,11 @@ public class lalr {
                 top++;
                 stack[top] = gotoState;
             }
-            else if (action == 999) {           // ACCEPT
+            else if (action == 999) {          
                 System.out.println("Accepted");
                 return;
             }
-            else {                              // ERROR
+            else {                             
                 System.out.println("Rejected at: " + symbol);
                 return;
             }

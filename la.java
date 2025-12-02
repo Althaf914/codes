@@ -29,13 +29,11 @@ public class la{
         while(i<n){
             char ch= code.charAt(i);
 
-            // skip white spaces
             if(Character.isWhitespace(ch)){
                 i++;
                 continue;
             }
 
-            //skip single line comments
             if(ch=='/' && i+1<n && code.charAt(i+1)=='/'){
                 i+=2;
 
@@ -43,7 +41,6 @@ public class la{
                 continue;
             }
 
-            //Identify keywords and identifiers
             if(Character.isLetter(ch) || ch=='_'){
                 StringBuilder word= new StringBuilder();
                 while(i<n && (Character.isLetterOrDigit(code.charAt(i))) || code.charAt(i)=='_'){
